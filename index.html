@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Senbd Live</title><link rel="stylesheet" href="style.css"></head><body>
+
+    <div class="card" id="main-card">
+        <div class="brand">Senbd <span class="live-badge">Live</span></div>
+
+        <!-- সাইন ইন ফর্ম -->
+        <div id="login-section">
+            <h2 style="margin-bottom: 20px; font-size: 18px;">সাইন ইন করুন</h2>
+            <p id="login-error" class="error-msg">ভুল তথ্য অথবা অ্যাকাউন্ট নেই!</p>
+            <div class="input-box"><input type="email" id="login-email" placeholder="আসলে ইমেইল দিন"></div>
+            <div class="input-box"><input type="password" id="login-pass" placeholder="আসল পাসওয়ার্ড দিন"></div>
+            <button class="btn" onclick="handleLogin()">সাইন ইন</button>
+            <div class="footer">অ্যাকাউন্ট নেই? <span onclick="toggleForm('signup')">নতুন তৈরি করুন</span></div>
+        </div>
+
+        <!-- রেজিস্ট্রেশন ফর্ম -->
+        <div id="signup-section" style="display: none;">
+            <h2 style="margin-bottom: 20px; font-size: 18px;">নতুন অ্যাকাউন্ট তৈরি করুন</h2>
+            <div class="input-box"><input type="text" id="reg-name" placeholder="আপনার আসল নাম দিন"></div>
+            <div class="input-box"><input type="email" id="reg-email" placeholder="আসল ইমেইল দিন"></div>
+            <div class="input-box"><input type="password" id="reg-pass" placeholder="আসল পাসওয়ার্ড দিন"></div>
+            <div class="input-box"><input type="tel" id="reg-phone" placeholder="আসল ফোন নাম্বার দিন"></div>
+            <button class="btn" onclick="handleSignup()">রেজিস্ট্রেশন করুন</button>
+            <div class="footer">ইতিমধ্যে অ্যাকাউন্ট আছে? <span onclick="toggleForm('login')">সাইন ইন করুন</span></div>
+        </div>
+
+        <!-- সফল মেসেজ -->
+        <div id="empty-screen">কোনো কিছু পাওয়া যায়নি</div>
+    </div>
+
+    <script>
+        function toggleForm(type) {
+            document.getElementById('login-section').style.display = type === 'login' ? 'block' : 'none';
+            document.getElementById('signup-section').style.display = type === 'signup' ? 'block' : 'none';
+            document.getElementById('login-error').style.display = 'none';
+        }
+
+        function handleSignup() {
+            let users = JSON.parse(localStorage.getItem('senbd_users')) || [];
+            let name = document.getElementById('reg-name').value;
+            let email = document.getElementById('reg-email').value;
+            let pass = document.getElementById('reg-pass').value;
+            let phone = document.getElementById('reg-phone').value;
+
+            if(name && email && pass && phone) {
+                users.push({ name, email, pass, phone });
+                localStorage.setItem('senbd_users', JSON.stringify(users));
+                alert('রেজিস্ট্রেশন সফল! এখন লগইন করুন।');
+                toggleForm('login');
+            } else {
+                alert('সবগুলো বক্স পূরণ করুন!');
+            }
+        }
+
+        function handleLogin() {
+            let users = JSON.parse(localStorage.getItem('senbd_users')) || [];
+            let email = document.getElementById('login-email').value;
+            let pass = document.getElementById('login-pass').value;
+
+            // ইউজার ডাটাবেজে আছে কি না চেক করা
+            let foundUser = users.find(u => u.email === email && u.pass === pass);
+
+            if (foundUser) {
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('signup-section').style.display = 'none';
+                document.getElementById('empty-screen').style.display = 'block';
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+            }
+        }
+    </script>
+<script src="script.js"></script></body></html>

